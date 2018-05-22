@@ -500,7 +500,7 @@ static NSString* toBase64(NSData* data) {
             break;
     };
 
-    if (saveToPhotoAlbum && image) {
+    if (saveToPhotoAlbum && image && ![self usesGeolocation]) {
         ALAssetsLibrary* library = [ALAssetsLibrary new];
         [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)(image.imageOrientation) completionBlock:nil];
     }
@@ -712,15 +712,15 @@ static NSString* toBase64(NSData* data) {
         [self.commandDelegate sendPluginResult:result callbackId:self.pickerController.callbackId];
     }
 
-    self.hasPendingOperation = NO;
-    self.pickerController = nil;
-    self.data = nil;
-    self.metadata = nil;
-
     if (options.saveToPhotoAlbum) {
         ALAssetsLibrary *library = [ALAssetsLibrary new];
         [library writeImageDataToSavedPhotosAlbum:self.data metadata:self.metadata completionBlock:nil];
     }
+    
+    self.hasPendingOperation = NO;
+    self.pickerController = nil;
+    self.data = nil;
+    self.metadata = nil;
 }
 
 @end
